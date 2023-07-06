@@ -1,13 +1,9 @@
 import pandas as pd
-import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn.metrics import accuracy_score
 from yellowbrick.classifier import ClassificationReport, ConfusionMatrix
 from yellowbrick.model_selection import FeatureImportances
-## from tkinter import *
-## from PIL import Image, ImageDraw
-## from tkinter import messagebox
 import graphviz
 
 data = pd.read_csv(r'/home/mateus/Desktop/Estudo/VSCode Projects/DiabetesDetection/diabetes-detection/diabetes-dataset.csv')
@@ -38,6 +34,7 @@ user_clf = user_clf.fit(X_user_train,Y_user_train)
 
 predictions = clf.predict(X_test)
 user_predictions = user_clf.predict(X_user_test)
+
 
 def feature_importance():
     viz = FeatureImportances(clf)
@@ -88,23 +85,23 @@ def test_pacient():
     age = int(input("Age: "))
     print("________________________________")
 
-    individual_info = np.array([pregnancies, glucose, blood_pressure, skin_thickness, bmi, age])
+    individual_info = [pregnancies, glucose, blood_pressure, skin_thickness, bmi, age]
     example_data = pd.DataFrame([individual_info], columns = ['Pregnancies', 'Glucose',	'BloodPressure',	'SkinThickness',	'BMI',	'Age'])
       
-    probabilty = user_clf.predict_proba(example_data)
-    user_accuracy = accuracy_score(Y_user_test, user_predictions)
     prediction = user_clf.predict(example_data)
     print(prediction)
-    print(probabilty)
-    print(f"Your info indicates that you have a {probabilty[0][1]*100:.2f}% chance of having diabetes, according to our classification."
-          f"The classification was made with a {user_accuracy*100:.2f}% accuracy.")
-
+    
+    if prediction == 1:
+        print("According to our classification, you possibly have diabetes, consult a doctor. ")
+    else: 
+        print("According to out classification, you possibly don't have diabetes.")
+        
 
 def main():
     print("Chose one of the options below, by typing the correspondent number: \n1: See Feature Importance Graph\n"
           "2: See Classification Report\n3: See Connfusion Matrix\n4: See Decision Tree\n5: Check the classification's accuracy\n"
           "6: Check classification for an individual's data\n\"E\": Exit program")
-    option = input()
+    option = input().strip().upper()
 
     match option:
         case '1': 
